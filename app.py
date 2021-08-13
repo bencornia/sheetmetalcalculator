@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import Frame, ttk
 from itertools import islice
 import math
+from sheet_metal_calc import calc_bend_deduct, calc_bend_centers
 
 
 def main():
@@ -61,8 +62,24 @@ def return_results(bend_properties, bend_count, bends, flanges, results):
         total_length = sum(flange_list) 
         flat_length = total_length - bend_deduction
 
+        # calculate bend_centers
+        length = 0
+        previous_deduct = 0
+        centers = ''
+        for i in range(bc):
+            deduct = bend_deduct_list[i]/2
+            flange = flange_list[i]        
+            bend_center = str(round(flange - deduct - previous_deduct + length, 2))
+            length = flange - deduct - previous_deduct + length
+            previous_deduct = deduct
+
+            centers += bend_center + '   '
+            
+
+
         # display results
         results['Flat Length:'].configure(text=f'{flat_length:.2f}')
+        results['Bend Centers:'].configure(text=f'{centers}')
 
 
         
